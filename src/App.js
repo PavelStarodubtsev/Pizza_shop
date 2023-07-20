@@ -1,16 +1,23 @@
+import { Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
-import PizzaBlock from './components/PizzaBlock/PizzaBlock';
-import Categories from './components/Search/Categories';
-import Sort from './components/Search/Sort';
+import Home from './pages/Home';
+import Cart from './pages/Cart';
 import './scss/app.scss';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
     <div className='wrapper'>
       <Header />
-      <Categories />
-      <Sort />
-      <PizzaBlock />
+      <div className='content'>
+        <div className='container'>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/cart' element={<Cart />} />
+            <Route path='*' element={<NotFound />} />
+          </Routes>
+        </div>
+      </div>
     </div>
   );
 }
