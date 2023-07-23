@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Categories from '../components/Search/Categories';
-import Sort from '../components/Search/Sort';
+
 import PizzaBlock from '../components/PizzaBlock';
 import { Skeleton } from '../components/PizzaBlock/Skeletone';
+import Categories from '../components/Categories';
+import Sort from '../components/Sort';
 
-const Home = () => {
+const Home = ({ searchValue }) => {
   const [isLoading, setIsloading] = useState(true);
   const [pizzas, setPizzas] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
@@ -19,9 +20,10 @@ const Home = () => {
     const categoryBy = categoryId > 0 ? `category=${categoryId}` : '';
     const sortBy = sortType.sortProperty.replace('-', '');
     const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
+    const searchInput = searchValue ? `&search=${searchValue}` : '';
 
     fetch(
-      `https://64b80d1321b9aa6eb0797c27.mockapi.io/items?${categoryBy}&sortBy=${sortBy}&order=${order}`
+      `https://64b80d1321b9aa6eb0797c27.mockapi.io/items?${categoryBy}&sortBy=${sortBy}&order=${order}${searchInput}`
     )
       .then((res) => res.json())
       .then((res) => {
@@ -29,7 +31,7 @@ const Home = () => {
         setIsloading(false);
       });
     window.scrollTo(0, 0);
-  }, [categoryId, sortType]);
+  }, [categoryId, sortType, searchValue]);
 
   return (
     <div className='container container--cart'>
@@ -39,6 +41,17 @@ const Home = () => {
       </div>
       <h2 className='content__title'>Все пиццы</h2>
       <div className='content__items'>
+        {/* {isLoading
+          ? [...new Array(6)].map((_, index) => <Skeleton key={index} />)
+          : pizzas
+              ?.filter((obj) => {
+                if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
+                  return true;
+                }
+                return false;
+              })
+              .map((obj) => <PizzaBlock key={obj.id} pizza={obj} />)} */}
+
         {isLoading
           ? [...new Array(6)].map((_, index) => <Skeleton key={index} />)
           : pizzas?.map((obj) => <PizzaBlock key={obj.id} pizza={obj} />)}
