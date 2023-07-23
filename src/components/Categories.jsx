@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const Categories = ({ value, onChangeCategory }) => {
   // const [activeIndex, setactiveIndex] = useState(0);
