@@ -1,13 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import styles from './Search.module.scss';
-import { SearchContext } from '../../App';
+// import { SearchContext } from '../../App';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearSearchValue, getSearchValue } from '../../redux/slices/filterSlice';
 
 const Search = () => {
-  const { searchValue, setSearchValue } = useContext(SearchContext);
-
-  //   const onClickClear = () => {
-  //     setSearchValue('');
-  //   };
+  const searchValue = useSelector((state) => state.filter.searchValue);
+  const dispatch = useDispatch();
 
   return (
     <div className={styles.root}>
@@ -47,14 +46,14 @@ const Search = () => {
       </svg>
       <input
         value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
+        onChange={(e) => dispatch(getSearchValue(e.target.value))}
         type='text'
         className={styles.input}
         placeholder='Поиск пиццы . . . '
       />
       {searchValue && (
         <svg
-          onClick={() => setSearchValue('')}
+          onClick={() => dispatch(clearSearchValue(''))}
           className={styles.clearIcon}
           viewBox='0 0 20 20'
           xmlns='http://www.w3.org/2000/svg'
