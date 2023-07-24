@@ -1,12 +1,42 @@
-import React from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import styles from './Search.module.scss';
-// import { SearchContext } from '../../App';
+import debounce from 'lodash.debounce';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearSearchValue, getSearchValue } from '../../redux/slices/filterSlice';
+import { setSearchValue } from '../../redux/slices/filterSlice';
 
 const Search = () => {
-  const searchValue = useSelector((state) => state.filter.searchValue);
   const dispatch = useDispatch();
+  const [value, setValue] = useState('');
+  const inputRef = useRef(null);
+
+  // 1. ф-ция очистки input, диспатчит setSearchValue('')
+  // передает в action.payload = '' , и еще с помощью
+  // useRef наводит focus() на элемент
+  const onClickClear = () => {
+    dispatch(setSearchValue(''));
+    setValue('');
+    inputRef.current.focus();
+  };
+
+  // 2. ф-ция делает задержку при помощи debounce из lodash
+  // диспатчит с задержкой setSearchValue(str)
+  // передает в action.payload = value из input
+  const updateSearchValue = useCallback(
+    debounce((str) => {
+      dispatch(setSearchValue(str));
+    }, 250),
+    []
+  );
+
+  // 3. ф-ция получает value из input
+  // и передает ее в локальный стейт setValue(e.target.value)
+  // а так же передает value из input в ф-цию updateSearchValue
+  // где вводимое в input  значение отправляется в redux.store
+  // с задержкой
+  const onChangeInput = (e) => {
+    setValue(e.target.value);
+    updateSearchValue(e.target.value);
+  };
 
   return (
     <div className={styles.root}>
@@ -45,15 +75,16 @@ const Search = () => {
         />
       </svg>
       <input
-        value={searchValue}
-        onChange={(e) => dispatch(getSearchValue(e.target.value))}
+        ref={inputRef}
+        value={value}
+        onChange={(e) => onChangeInput(e)}
         type='text'
         className={styles.input}
         placeholder='Поиск пиццы . . . '
       />
-      {searchValue && (
+      {value && (
         <svg
-          onClick={() => dispatch(clearSearchValue(''))}
+          onClick={onClickClear}
           className={styles.clearIcon}
           viewBox='0 0 20 20'
           xmlns='http://www.w3.org/2000/svg'
