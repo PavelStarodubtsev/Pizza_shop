@@ -20,6 +20,13 @@ const Home = () => {
   const searchValue = useSelector((state) => state.filter.searchValue);
   const currentPage = useSelector((state) => state.filter.currentPage);
 
+  const [categoryId, setCategoryId] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortType, setSortType] = useState({
+    name: 'популярности',
+    sortProperty: 'rating'
+  });
+
   useEffect(() => {
     setIsloading(true);
 
@@ -48,6 +55,7 @@ const Home = () => {
     dispatch(setCurrentPage(number));
   };
 
+
   return (
     <div className='container'>
       <div className='content__top'>
@@ -56,17 +64,6 @@ const Home = () => {
       </div>
       <h2 className='content__title'>Все пиццы</h2>
       <div className='content__items'>
-        {/* {isLoading
-          ? [...new Array(6)].map((_, index) => <Skeleton key={index} />)
-          : pizzas
-              ?.filter((obj) => {
-                if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
-                  return true;
-                }
-                return false;
-              })
-              .map((obj) => <PizzaBlock key={obj.id} pizza={obj} />)} */}
-
         {isLoading
           ? [...new Array(6)].map((_, index) => <Skeleton key={index} />)
           : pizzas?.map((obj) => <PizzaBlock key={obj.id} pizza={obj} />)}
