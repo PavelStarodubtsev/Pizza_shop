@@ -6,7 +6,6 @@ import './scss/app.scss';
 import NotFound from './pages/NotFound';
 import React from 'react';
 
-export const SearchContext = React.createContext();
 
 function App() {
   return (

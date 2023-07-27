@@ -31,7 +31,7 @@ export const pizzaSlice = createSlice({
   extraReducers: {
     [fetchPizzas.pending]: (state) => {
       state.status = 'loading';
-    //   state.items = [];
+      //   state.items = [];
     },
     [fetchPizzas.fulfilled]: (state, action) => {
       state.items = action.payload;
@@ -43,6 +43,9 @@ export const pizzaSlice = createSlice({
     }
   }
 });
+
+export const selectPizzaItems = (state) => state.pizzas.items;
+export const selectPizzaStatus = (state) => state.pizzas.status;
 
 // Action creators are generated for each case reducer function
 export const { setItem } = pizzaSlice.actions;

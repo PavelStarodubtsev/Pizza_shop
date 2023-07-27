@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSortType } from '../redux/slices/filterSlice';
+import { selectFilterSort, setSortType } from '../redux/slices/filterSlice';
 
 export const listSort = [
   { name: 'популярности (DESC)', sortProperty: 'rating' },
@@ -16,15 +16,15 @@ const Sort = () => {
   const [open, setOpen] = useState(false);
   const sortRef = useRef();
 
-  const sortType = useSelector((state) => state.filter.sortType);
+  // селектор
+  const sortType = useSelector(selectFilterSort);
 
   const onClickListItem = (obj) => {
     dispatch(setSortType(obj));
     setOpen(false);
   };
 
-
-  // навешиваем слушатель события с ф-цией ,которая проверяет что 
+  // навешиваем слушатель события с ф-цией ,которая проверяет что
   // событие произошло за пределами popUp окна для Sort,потом его удаляем
   useEffect(() => {
     const handleClickOutside = (event) => {

@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem } from '../../redux/slices/cartSlice';
+import { addItem, selectCartItemById } from '../../redux/slices/cartSlice';
 
 const typeName = ['тонкое', 'традиционное'];
 
 const PizzaBlock = ({ pizza }) => {
-  const { id, title, price, imageUrl, sizes, types, rating, category } = pizza;
+  const { id, title, price, imageUrl, sizes, types } = pizza;
 
   const dispatch = useDispatch();
-  const cartItem = useSelector((state) => state.cart.items.find((obj) => obj.id === id));
+  //   const cartItem = useSelector((state) => state.cart.items.find((obj) => obj.id === id));
+
+  // сделали селектор , он принимает еще одну ф-цию в которую прокидываем id - пиццы
+  // из PizzaBlock вызываем этот селектор ,как ф-цию и передаем в нее id - пиццы
+  // получается что сперва ф-ция (id) => вызывает др. ф-цию (state) => state.cart.items.find((obj) => obj.id === id)
+  // и возвращает нам одну пиццу по id
+  const cartItem = useSelector(selectCartItemById(id));
 
   const [typeActive, setTypeActive] = useState(0);
   const [sizeActive, setSizeActive] = useState(0);
 
   const addedCount = cartItem ? cartItem.count : 0;
-
 
   const onClickAdd = () => {
     const item = {
@@ -23,7 +28,7 @@ const PizzaBlock = ({ pizza }) => {
       price,
       imageUrl,
       types: typeName[typeActive],
-      sizes: sizes[sizeActive],
+      sizes: sizes[sizeActive]
       //   types: typeName['activeType'],
     };
     dispatch(addItem(item));
