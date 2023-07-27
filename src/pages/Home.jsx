@@ -8,8 +8,8 @@ import Categories from '../components/Categories';
 import Sort, { listSort } from '../components/Sort';
 import Pagination from '../components/Pagination';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-import { fetchPizzas } from '../redux/slices/pizzaSlice';
+import { selectFilter, setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
+import { fetchPizzas, selectPizzaItems, selectPizzaStatus } from '../redux/slices/pizzaSlice';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -19,12 +19,10 @@ const Home = () => {
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
-  const categoryId = useSelector((state) => state.filter.categoryId);
-  const sortType = useSelector((state) => state.filter.sortType);
-  const searchValue = useSelector((state) => state.filter.searchValue);
-  const currentPage = useSelector((state) => state.filter.currentPage);
-  const pizzas = useSelector((state) => state.pizzas.items);
-  const status = useSelector((state) => state.pizzas.status);
+  // selectors
+  const { categoryId, sortType, searchValue, currentPage } = useSelector(selectFilter);
+  const pizzas = useSelector(selectPizzaItems);
+  const status = useSelector(selectPizzaStatus);
 
   const onChangeCategory = (index) => {
     dispatch(setCategory(index));
@@ -98,7 +96,7 @@ const Home = () => {
       </div>
       <h2 className='content__title'>Все пиццы</h2>
       {status === 'error' ? (
-           <div className="content__error-info">
+        <div className='content__error-info'>
           <h2>Произошла ошибка 😕</h2>
           <p>К сожалению, не удалось получить питсы. Попробуйте повторить попытку позже.</p>
         </div>

@@ -52,6 +52,14 @@ export const cartSlice = createSlice({
   }
 });
 
+// селекторы
+export const selectCart = (state) => state.cart;
+// сделали селектор , он принимает еще одну ф-цию в которую прокидываем id - пиццы
+// из PizzaBlock вызываем этот селектор ,как ф-цию и передаем в нее id - пиццы
+// получается что сперва ф-ция (id) => вызывает др. ф-цию (state) => state.cart.items.find((obj) => obj.id === id)
+// и возвращает нам одну пиццу по id
+export const selectCartItemById = (id) => (state) => state.cart.items.find((obj) => obj.id === id);
+
 // Action creators are generated for each case reducer function
 export const { addItem, removeItem, clearItem, minusItem } = cartSlice.actions;
 

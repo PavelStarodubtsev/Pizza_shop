@@ -6,6 +6,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // }
 
 const initialState = {
+  searchValue: '',
   categoryId: 0,
   sortType: {
     name: 'популярности (DESC)',
@@ -40,8 +41,18 @@ export const filterSlice = createSlice({
   }
 });
 
+// селектор
+export const selectFilterSort = (state) => state.filter.sortType;
+export const selectFilterCategory = (state) => state.filter.categoryId;
+export const selectFilter = (state) => state.filter;
+
 // Action creators are generated for each case reducer function
-export const { setCategory, setSortType, setSearchValue, setFilters, setCurrentPage } =
-  filterSlice.actions;
+export const {
+  setCategory,
+  setSortType,
+  setSearchValue,
+  setFilters,
+  setCurrentPage
+} = filterSlice.actions;
 
 export default filterSlice.reducer;
