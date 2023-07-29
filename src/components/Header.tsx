@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
 import logoSvg from '../assets/img/pizza-logo.svg';
 import { Link, useLocation } from 'react-router-dom';
 import Search from './Search';
 import { useSelector } from 'react-redux';
 import { selectCart } from '../redux/slices/cartSlice';
 
-const Header = () => {
+const Header: FC = () => {
   // получаем данные из стора через селектор - selectCart
   const { totalPrice, items } = useSelector(selectCart);
   const location = useLocation();
 
+  // !! грубо типизировали, потом наверное поменяем 
+  const totalCount = items.reduce((sum: number, obj: any) => sum + obj.count, 0);
 
-  const totalCount = items.reduce((sum, obj) => sum + obj.count, 0);
 
   return (
     <div className='header'>

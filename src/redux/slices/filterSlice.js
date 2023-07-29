@@ -12,7 +12,6 @@ const initialState = {
     name: 'популярности (DESC)',
     sortProperty: 'rating'
   },
-  searchValue: '',
   currentPage: 1
 };
 

@@ -1,8 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectFilterSort, setSortType } from '../redux/slices/filterSlice';
 
-export const listSort = [
+type ListSortType = {
+  name: string;
+  sortProperty: string;
+};
+
+export const listSort: ListSortType[] = [
   { name: 'популярности (DESC)', sortProperty: 'rating' },
   { name: 'популярности (ASC)', sortProperty: '-rating' },
   { name: 'цене (DESC)', sortProperty: 'price' },
@@ -11,15 +16,15 @@ export const listSort = [
   { name: 'алфавиту (ASC)', sortProperty: '-title' }
 ];
 
-const Sort = () => {
+const Sort: FC = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const sortRef = useRef();
+  const sortRef = useRef<HTMLDivElement>(null);
 
   // селектор
-  const sortType = useSelector(selectFilterSort);
+  const sortType: ListSortType = useSelector(selectFilterSort);
 
-  const onClickListItem = (obj) => {
+  const onClickListItem = (obj: ListSortType) => {
     dispatch(setSortType(obj));
     setOpen(false);
   };
@@ -27,7 +32,8 @@ const Sort = () => {
   // навешиваем слушатель события с ф-цией ,которая проверяет что
   // событие произошло за пределами popUp окна для Sort,потом его удаляем
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    // !! позже нужно поменять тип event: any 
+    const handleClickOutside = (event: any) => {
       if (!event.composedPath().includes(sortRef.current)) {
         setOpen(false);
       }

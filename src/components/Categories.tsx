@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { selectFilter } from '../redux/slices/filterSlice';
 
-const Categories = ({ onChangeCategory }) => {
+type CategoriesPropType = {
+  onChangeCategory: (index: number) => void;
+};
+
+const Categories: FC<CategoriesPropType> = ({ onChangeCategory }) => {
   // селектор
   const { categoryId } = useSelector(selectFilter);
 

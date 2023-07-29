@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useDispatch } from 'react-redux';
 import { addItem, minusItem, removeItem } from '../redux/slices/cartSlice';
+import { CartItemType } from '../pages/Cart';
 
-const CartItem = ({ item }) => {
-  const { id, imageUrl, title, types, sizes, price } = item;
+// export type CartItemPropType = CartItemType;
 
+const CartItem: FC<CartItemType> = ({ id, count, imageUrl, title, types, sizes, price }) => {
   const dispatch = useDispatch();
 
   const onClickPlus = () => {
@@ -32,7 +33,7 @@ const CartItem = ({ item }) => {
       </div>
       <div className='cart__item-count'>
         <button
-          disabled={item.count === 1}
+          disabled={count === 1}
           onClick={onClickMinus}
           className='button button--outline button--circle cart__item-count-minus'
         >
@@ -53,7 +54,7 @@ const CartItem = ({ item }) => {
             ></path>
           </svg>
         </button>
-        <b>{item.count}</b>
+        <b>{count}</b>
         <button
           onClick={onClickPlus}
           className='button button--outline button--circle cart__item-count-plus'
@@ -77,7 +78,7 @@ const CartItem = ({ item }) => {
         </button>
       </div>
       <div className='cart__item-price'>
-        <b>{price * item.count} ₽</b>
+        <b>{price * count} ₽</b>
       </div>
       <div className='cart__item-remove'>
         <div onClick={onClickRemove} className='button button--outline button--circle'>

@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, selectCartItemById } from '../../redux/slices/cartSlice';
 import { Link } from 'react-router-dom';
 
+type PizzaBlockPropType = {
+  id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  types: number[];
+  sizes: number[];
+};
+
 const typeName = ['тонкое', 'традиционное'];
 
-const PizzaBlock = ({ pizza }) => {
-  const { id, title, price, imageUrl, sizes, types } = pizza;
-
+const PizzaBlock: FC<PizzaBlockPropType> = ({ id, title, price, imageUrl, sizes, types }) => {
   const dispatch = useDispatch();
-  //   const cartItem = useSelector((state) => state.cart.items.find((obj) => obj.id === id));
 
   // сделали селектор , он принимает еще одну ф-цию в которую прокидываем id - пиццы
   // из PizzaBlock вызываем этот селектор ,как ф-цию и передаем в нее id - пиццы
@@ -17,8 +23,8 @@ const PizzaBlock = ({ pizza }) => {
   // и возвращает нам одну пиццу по id
   const cartItem = useSelector(selectCartItemById(id));
 
-  const [typeActive, setTypeActive] = useState(0);
-  const [sizeActive, setSizeActive] = useState(0);
+  const [typeActive, setTypeActive] = useState<number>(0);
+  const [sizeActive, setSizeActive] = useState<number>(0);
 
   const addedCount = cartItem ? cartItem.count : 0;
 
@@ -30,6 +36,7 @@ const PizzaBlock = ({ pizza }) => {
       imageUrl,
       types: typeName[typeActive],
       sizes: sizes[sizeActive]
+
       //   types: typeName['activeType'],
     };
     dispatch(addItem(item));
@@ -44,7 +51,7 @@ const PizzaBlock = ({ pizza }) => {
         </Link>
         <div className='pizza-block__selector'>
           <ul>
-            {types.map((type) => (
+            {types?.map((type) => (
               <li
                 key={type}
                 onClick={() => setTypeActive(type)}
@@ -55,7 +62,7 @@ const PizzaBlock = ({ pizza }) => {
             ))}
           </ul>
           <ul>
-            {sizes.map((size, index) => (
+            {sizes?.map((size: number, index: number) => (
               <li
                 key={index}
                 onClick={() => setSizeActive(index)}
