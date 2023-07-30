@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, selectCartItemById } from '../../redux/slices/cartSlice';
+import { CartItem, addItem, selectCartItemById } from '../../redux/slices/cartSlice';
 import { Link } from 'react-router-dom';
 
 type PizzaBlockPropType = {
@@ -10,11 +10,21 @@ type PizzaBlockPropType = {
   imageUrl: string;
   types: number[];
   sizes: number[];
+  rating: number;
+  count: number;
 };
 
 const typeName = ['тонкое', 'традиционное'];
 
-const PizzaBlock: FC<PizzaBlockPropType> = ({ id, title, price, imageUrl, sizes, types }) => {
+const PizzaBlock: FC<PizzaBlockPropType> = ({
+  id,
+  title,
+  price,
+  imageUrl,
+  sizes,
+  types,
+  count
+}) => {
   const dispatch = useDispatch();
 
   // сделали селектор , он принимает еще одну ф-цию в которую прокидываем id - пиццы
@@ -29,13 +39,15 @@ const PizzaBlock: FC<PizzaBlockPropType> = ({ id, title, price, imageUrl, sizes,
   const addedCount = cartItem ? cartItem.count : 0;
 
   const onClickAdd = () => {
-    const item = {
+    // CartItem - тип из cartSlice
+    const item: CartItem = {
       id,
       title,
-      price,
+      price, 
       imageUrl,
       types: typeName[typeActive],
-      sizes: sizes[sizeActive]
+      sizes: sizes[sizeActive],
+      count: 0
 
       //   types: typeName['activeType'],
     };

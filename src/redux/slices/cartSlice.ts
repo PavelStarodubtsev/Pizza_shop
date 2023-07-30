@@ -1,11 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit';
-// import type { PayloadAction } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 
-// export interface CounterState {
-//   value: number
-// }
+export type CartItem = {
+  id: string;
+  title: string;
+  imageUrl: string;
+  count: number;
+  types: string;
+  sizes: number;
+  price: number;
+};
 
-const initialState = {
+interface CartSliceState {
+  totalPrice: number;
+  items: CartItem[];
+}
+
+const initialState: CartSliceState = {
   items: [],
   totalPrice: 0
 };
@@ -14,7 +25,7 @@ export const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addItem: (state, action) => {
+    addItem: (state, action: PayloadAction<CartItem>) => {
       const findItem = state.items.find((obj) => obj.id === action.payload.id);
 
       if (findItem) {
@@ -31,7 +42,7 @@ export const cartSlice = createSlice({
       }, 0);
     },
 
-    minusItem: (state, action) => {
+    minusItem: (state, action: PayloadAction<string>) => {
       const findItem = state.items.find((obj) => obj.id === action.payload);
 
       if (findItem) {
@@ -39,7 +50,7 @@ export const cartSlice = createSlice({
         state.totalPrice -= findItem.price;
       }
     },
-    removeItem: (state, action) => {
+    removeItem: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((obj) => obj.id !== action.payload);
       state.totalPrice = state.items.reduce((sum, obj) => {
         return obj.price * obj.count - sum;
@@ -53,12 +64,13 @@ export const cartSlice = createSlice({
 });
 
 // селекторы
-export const selectCart = (state) => state.cart;
+export const selectCart = (state: RootState) => state.cart;
 // сделали селектор , он принимает еще одну ф-цию в которую прокидываем id - пиццы
 // из PizzaBlock вызываем этот селектор ,как ф-цию и передаем в нее id - пиццы
 // получается что сперва ф-ция (id) => вызывает др. ф-цию (state) => state.cart.items.find((obj) => obj.id === id)
 // и возвращает нам одну пиццу по id
-export const selectCartItemById = (id) => (state) => state.cart.items.find((obj) => obj.id === id);
+export const selectCartItemById = (id: string) => (state: RootState) =>
+  state.cart.items.find((obj) => obj.id === id);
 
 // Action creators are generated for each case reducer function
 export const { addItem, removeItem, clearItem, minusItem } = cartSlice.actions;
