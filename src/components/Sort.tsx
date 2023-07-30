@@ -1,19 +1,33 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectFilterSort, setSortType } from '../redux/slices/filterSlice';
+import {
+  SortPropertyEnum,
+  SortType,
+  selectFilterSort,
+  setSortType
+} from '../redux/slices/filterSlice';
+
+// типизируем event в handleClickOutside
+interface MouseEventWithPath extends MouseEvent {
+  composedPath: () => EventTarget[];
+}
+
+type PopupClick = MouseEventWithPath & {
+  path: Node[];
+};
 
 type ListSortType = {
   name: string;
-  sortProperty: string;
+  sortProperty: SortPropertyEnum;
 };
 
 export const listSort: ListSortType[] = [
-  { name: 'популярности (DESC)', sortProperty: 'rating' },
-  { name: 'популярности (ASC)', sortProperty: '-rating' },
-  { name: 'цене (DESC)', sortProperty: 'price' },
-  { name: 'цене (ASC)', sortProperty: '-price' },
-  { name: 'алфавиту (DESC)', sortProperty: 'title' },
-  { name: 'алфавиту (ASC)', sortProperty: '-title' }
+  { name: 'популярности (DESC)', sortProperty: SortPropertyEnum.RATING_DESC },
+  { name: 'популярности (ASC)', sortProperty: SortPropertyEnum.RATING_ASC },
+  { name: 'цене (DESC)', sortProperty: SortPropertyEnum.PRICE_DESC },
+  { name: 'цене (ASC)', sortProperty: SortPropertyEnum.PRICE_ASC },
+  { name: 'алфавиту (DESC)', sortProperty: SortPropertyEnum.TITLE_DESC },
+  { name: 'алфавиту (ASC)', sortProperty: SortPropertyEnum.TITLE_ASC }
 ];
 
 const Sort: FC = () => {
@@ -22,9 +36,9 @@ const Sort: FC = () => {
   const sortRef = useRef<HTMLDivElement>(null);
 
   // селектор
-  const sortType: ListSortType = useSelector(selectFilterSort);
+  const sortType = useSelector(selectFilterSort);
 
-  const onClickListItem = (obj: ListSortType) => {
+  const onClickListItem = (obj: SortType) => {
     dispatch(setSortType(obj));
     setOpen(false);
   };
@@ -32,9 +46,10 @@ const Sort: FC = () => {
   // навешиваем слушатель события с ф-цией ,которая проверяет что
   // событие произошло за пределами popUp окна для Sort,потом его удаляем
   useEffect(() => {
-    // !! позже нужно поменять тип event: any 
-    const handleClickOutside = (event: any) => {
-      if (!event.composedPath().includes(sortRef.current)) {
+    // !! позже нужно поменять тип event: any
+    const handleClickOutside = (event: MouseEvent) => {
+      const popupClickEvent = event as PopupClick;
+      if (sortRef.current && !popupClickEvent.composedPath().includes(sortRef.current)) {
         setOpen(false);
       }
     };
