@@ -48,7 +48,7 @@ export const filterSlice = createSlice({
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
     },
-    setFilters: (state, action: PayloadAction<FilterSliceState>) => {
+    setFilters(state, action: PayloadAction<FilterSliceState>) {
       if (Object.keys(action.payload).length) {
         state.currentPage = Number(action.payload.currentPage);
         state.categoryId = Number(action.payload.categoryId);
@@ -57,7 +57,7 @@ export const filterSlice = createSlice({
         state.currentPage = 1;
         state.categoryId = 0;
         state.sort = {
-          name: 'популярности (DESC)',
+          name: 'популярности',
           sortProperty: SortPropertyEnum.RATING_DESC
         };
       }

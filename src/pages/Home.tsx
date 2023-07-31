@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, memo, useCallback, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import qs from 'qs';
 
@@ -30,9 +30,9 @@ const Home: FC = () => {
   const pizzas = useSelector(selectPizzaItems);
   const status = useSelector(selectPizzaStatus);
 
-  const onChangeCategory = (index: number) => {
+  const onChangeCategory = useCallback((index: number) => {
     dispatch(setCategory(index));
-  };
+  }, []);
 
   const onChangePage = (page: number) => {
     dispatch(setCurrentPage(page));
@@ -69,7 +69,7 @@ const Home: FC = () => {
       navigate(`?${queryString}`);
     }
     // после первого рендера меняет isMounted = true
-    isMounted.current = true;
+    isMounted.current = false;
   }, [categoryId, sort, searchValue, currentPage]);
 
   // 2.Если был первый рендер, то проверяем URl-параметры и сохраняем в редуксе
@@ -98,8 +98,8 @@ const Home: FC = () => {
   return (
     <div className='container'>
       <div className='content__top'>
-        <Categories onChangeCategory={onChangeCategory} />
-        <Sort />
+        <Categories categoryId={categoryId} onChangeCategory={onChangeCategory} />
+        <Sort sort={sort} />
       </div>
       <h2 className='content__title'>Все пиццы</h2>
       {status === 'error' ? (
@@ -120,4 +120,4 @@ const Home: FC = () => {
   );
 };
 
-export default Home;
+export default memo(Home);

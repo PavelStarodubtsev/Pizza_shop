@@ -1,11 +1,10 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../store';
-import { SortType } from './filterSlice';
+
 
 export type SearchPizzaParams = {
   categoryBy: string;
-  //   sortBy: string;
   sortBy: string;
   order: string;
   search: string;
