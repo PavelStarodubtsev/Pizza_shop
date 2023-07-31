@@ -1,11 +1,6 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  SortPropertyEnum,
-  SortType,
-  selectFilterSort,
-  setSortType
-} from '../redux/slices/filterSlice';
+import React, { FC, memo, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { SortPropertyEnum, SortType, setSortType } from '../redux/slices/filterSlice';
 
 // типизируем event в handleClickOutside
 interface MouseEventWithPath extends MouseEvent {
@@ -21,6 +16,10 @@ type ListSortType = {
   sortProperty: SortPropertyEnum;
 };
 
+type SortPropType = {
+  sort: SortType;
+};
+
 export const listSort: ListSortType[] = [
   { name: 'популярности (DESC)', sortProperty: SortPropertyEnum.RATING_DESC },
   { name: 'популярности (ASC)', sortProperty: SortPropertyEnum.RATING_ASC },
@@ -30,13 +29,13 @@ export const listSort: ListSortType[] = [
   { name: 'алфавиту (ASC)', sortProperty: SortPropertyEnum.TITLE_ASC }
 ];
 
-const Sort: FC = () => {
+const Sort: FC<SortPropType> = ({ sort }) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
   // селектор
-  const sortType = useSelector(selectFilterSort);
+  //   const sortType = useSelector(selectFilterSort);
 
   const onClickListItem = (obj: SortType) => {
     dispatch(setSortType(obj));
@@ -77,7 +76,7 @@ const Sort: FC = () => {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{sortType?.name}</span>
+        <span onClick={() => setOpen(!open)}>{sort?.name}</span>
       </div>
       {open && (
         <div className='sort__popup'>
@@ -86,7 +85,7 @@ const Sort: FC = () => {
               <li
                 key={index}
                 onClick={() => onClickListItem(obj)}
-                className={sortType.sortProperty === obj.sortProperty ? 'active' : ''}
+                className={sort.sortProperty === obj.sortProperty ? 'active' : ''}
               >
                 {obj.name}
               </li>
@@ -98,4 +97,4 @@ const Sort: FC = () => {
   );
 };
 
-export default Sort;
+export default memo(Sort);
