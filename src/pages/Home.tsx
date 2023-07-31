@@ -2,13 +2,16 @@ import React, { FC, memo, useCallback, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import qs from 'qs';
 
-import PizzaBlock from '../components/PizzaBlock';
-import { Skeleton } from '../components/PizzaBlock/Skeletone';
-import Categories from '../components/Categories';
-import Sort, { listSort } from '../components/Sort';
-import Pagination from '../components/Pagination';
-import { useSelector } from 'react-redux';
+import {
+    Categories,
+    Sort,
+    PizzaBlock,
+    Skeleton,
+    Pagination,
+    listSort
+} from '../components/index';
 
+import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../redux/store';
 import { selectFilter } from '../redux/filter/selectors';
 import { setCategory, setCurrentPage, setFilters } from '../redux/filter/slice';
@@ -89,11 +92,6 @@ const Home: FC = () => {
       isSearch.current = true;
     }
   }, [location]);
-
-  // 3. Если был первый рендер, то запрашиваем пиццы
-  //   useEffect(() => {
-  //     getPizzas();
-  //   }, []);
 
   return (
     <div className='container'>

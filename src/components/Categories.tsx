@@ -8,8 +8,8 @@ type CategoriesPropType = {
   onChangeCategory: (index: number) => void;
 };
 
-const Categories: FC<CategoriesPropType> = ({ categoryId, onChangeCategory }) => {
-  // 1.аргумент - название компонента 
+export const Categories: FC<CategoriesPropType> = memo(({ categoryId, onChangeCategory }) => {
+  // 1.аргумент - название компонента
   // 2.аргумент - пропсы ,которые принимает компонент
   // Этот Хук следит только за изменением пропсов
   //   useWhyDidYouUpdate('Categories', { categoryId, onChangeCategory });
@@ -29,6 +29,4 @@ const Categories: FC<CategoriesPropType> = ({ categoryId, onChangeCategory }) =>
       </ul>
     </div>
   );
-};
-
-export default memo(Categories);
+});

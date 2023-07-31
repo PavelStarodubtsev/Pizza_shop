@@ -19,7 +19,7 @@ type PizzaBlockPropType = {
 
 const typeName = ['тонкое', 'традиционное'];
 
-const PizzaBlock: FC<PizzaBlockPropType> = ({
+export const PizzaBlock: FC<PizzaBlockPropType> = ({
   id,
   title,
   price,
@@ -109,5 +109,3 @@ const PizzaBlock: FC<PizzaBlockPropType> = ({
     </div>
   );
 };
-
-export default PizzaBlock;
