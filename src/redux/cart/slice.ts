@@ -1,24 +1,15 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+import { CartItem, CartSliceState } from './types';
+import { calcTotalPrice } from '../../utils/calcTotalPrice';
+import { getCardFromLS } from '../../utils/getCardFromLS';
 
-export type CartItem = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  count: number;
-  types: string;
-  sizes: number;
-  price: number;
-};
-
-interface CartSliceState {
-  totalPrice: number;
-  items: CartItem[];
-}
+const { items, totalPrice } = getCardFromLS();
 
 const initialState: CartSliceState = {
-  items: [],
-  totalPrice: 0
+  // ф-ция getCardFromLS() - получает список пицц из корзины,сохраненные
+  //  в localStorage, чтобы при перезагрузке пиццы не пропадали из корзины
+  items: items,
+  totalPrice: totalPrice
 };
 
 export const cartSlice = createSlice({
@@ -36,10 +27,7 @@ export const cartSlice = createSlice({
           count: 1
         });
       }
-
-      state.totalPrice = state.items.reduce((sum, obj) => {
-        return obj.price * obj.count + sum;
-      }, 0);
+      state.totalPrice = calcTotalPrice(state.items);
     },
 
     minusItem: (state, action: PayloadAction<string>) => {
@@ -62,15 +50,6 @@ export const cartSlice = createSlice({
     }
   }
 });
-
-// селекторы
-export const selectCart = (state: RootState) => state.cart;
-// сделали селектор , он принимает еще одну ф-цию в которую прокидываем id - пиццы
-// из PizzaBlock вызываем этот селектор ,как ф-цию и передаем в нее id - пиццы
-// получается что сперва ф-ция (id) => вызывает др. ф-цию (state) => state.cart.items.find((obj) => obj.id === id)
-// и возвращает нам одну пиццу по id
-export const selectCartItemById = (id: string) => (state: RootState) =>
-  state.cart.items.find((obj) => obj.id === id);
 
 // Action creators are generated for each case reducer function
 export const { addItem, removeItem, clearItem, minusItem } = cartSlice.actions;

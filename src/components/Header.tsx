@@ -1,17 +1,26 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import logoSvg from '../assets/img/pizza-logo.svg';
 import { Link, useLocation } from 'react-router-dom';
 import Search from './Search';
 import { useSelector } from 'react-redux';
-import { selectCart } from '../redux/slices/cartSlice';
+import { selectCart } from '../redux/cart/selectors';
 
 const Header: FC = () => {
+  const isMounted = useRef(false);
   // получаем данные из стора через селектор - selectCart
   const { totalPrice, items } = useSelector(selectCart);
   const location = useLocation();
 
   // !! грубо типизировали, потом наверное поменяем
-  const totalCount = items.reduce((sum: number, obj: any) => sum + obj.count, 0);
+  //   const totalCount = items.reduce((sum: number, obj: any) => sum + obj.count, 0);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      const json = JSON.stringify(items);
+      localStorage.setItem('pizzaCart', json);
+    }
+    isMounted.current = true;
+  }, [totalPrice]);
 
   return (
     <div className='header'>
@@ -61,7 +70,7 @@ const Header: FC = () => {
                   strokeLinejoin='round'
                 />
               </svg>
-              <span>{totalCount}</span>
+              <span>{totalPrice}</span>
             </Link>
           )}
         </div>
