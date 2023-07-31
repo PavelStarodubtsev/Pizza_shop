@@ -1,6 +1,7 @@
 import React, { FC, memo, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { SortPropertyEnum, SortType, setSortType } from '../redux/slices/filterSlice';
+import { SortPropertyEnum, SortType } from '../redux/filter/types';
+import { setSortType } from '../redux/filter/slice';
 
 // типизируем event в handleClickOutside
 interface MouseEventWithPath extends MouseEvent {
